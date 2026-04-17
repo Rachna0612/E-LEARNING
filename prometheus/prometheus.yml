@@ -1,0 +1,35 @@
+global:
+  scrape_interval: 15s       # Scrape every 15 seconds
+  evaluation_interval: 15s   # Evaluate alert rules every 15 seconds
+ 
+# Alertmanager config (we add this in a later step)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+ 
+# Rules files (for alerts)
+rule_files: []
+ 
+# Scrape configs — this is where you define your targets
+scrape_configs:
+ 
+  # Prometheus monitors itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+ 
+  # Node Exporter — system metrics for your EC2
+  - job_name: 'node_exporter'
+    static_configs:
+      - targets: ['localhost:9100']
+        labels:
+          instance: 'elearning-server'
+          environment: 'production'
+ 
+  # Nginx metrics (requires nginx-prometheus-exporter — we add this next)
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['localhost:9113']
+        labels:
+          app: 'e-learning'
