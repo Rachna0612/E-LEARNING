@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: learned-config
+  namespace: learned
+data:
+  APP_NAME: "LearnEd Platform"
+  APP_ENV: "production"
+  APP_VERSION: "v1.0"
