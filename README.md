@@ -1,7 +1,5 @@
 Complete DevOps Deployment Guide
 E-Learning Frontend on AWS + Kubernetes + Prometheus + Grafana
-Time to Complete: 2 hours
-Difficulty: Beginner-friendly
 Project: Deploy HTML/CSS/JS frontend with full monitoring
 
 📋 Table of Contents
