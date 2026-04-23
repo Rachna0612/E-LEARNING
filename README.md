@@ -790,6 +790,4 @@ Kubernetes Docs: https://kubernetes.io/docs/
 Docker Docs: https://docs.docker.com/
 Prometheus Docs: https://prometheus.io/docs/
 Grafana Dashboards: https://grafana.com/grafana/dashboards/
-Good luck with your presentation! 🎉
 
-Remember: The goal is to show you understand DevOps concepts and can implement them. Don't worry if something breaks during demo - explaining how you'd troubleshoot shows real understanding.
