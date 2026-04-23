@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: e-learning-monitor
+  labels:
+    app: e-learning
+    release: prometheus
+spec:
+  # Select services to monitor
+  selector:
+    matchLabels:
+      app: e-learning
+  
+  # Endpoints to scrape metrics from
+  endpoints:
+  - port: http
+    interval: 30s
+    path: /metrics
+    
+  # Namespace selector
+  namespaceSelector:
+    matchNames:
+    - default

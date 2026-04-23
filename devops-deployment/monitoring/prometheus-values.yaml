@@ -1,0 +1,99 @@
+# Helm values for Prometheus stack
+# Use this file with: helm install -f prometheus-values.yaml
+
+# Prometheus configuration
+prometheus:
+  service:
+    type: NodePort
+    nodePort: 30090
+  
+  prometheusSpec:
+    # Retention period for metrics
+    retention: 7d
+    
+    # Storage
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+    
+    # Resource limits
+    resources:
+      requests:
+        memory: 512Mi
+        cpu: 250m
+      limits:
+        memory: 2Gi
+        cpu: 1000m
+
+# Grafana configuration
+grafana:
+  service:
+    type: NodePort
+    nodePort: 30030
+  
+  # Admin password (change this!)
+  adminPassword: admin123
+  
+  # Enable persistence
+  persistence:
+    enabled: true
+    size: 5Gi
+  
+  # Resource limits
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  
+  # Pre-installed dashboards
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'default'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/default
+
+# Alertmanager configuration
+alertmanager:
+  service:
+    type: NodePort
+    nodePort: 30093
+  
+  config:
+    global:
+      resolve_timeout: 5m
+    
+    route:
+      group_by: ['alertname', 'cluster']
+      group_wait: 10s
+      group_interval: 10s
+      repeat_interval: 12h
+      receiver: 'null'
+    
+    receivers:
+    - name: 'null'
+
+# Node Exporter (collects node metrics)
+nodeExporter:
+  enabled: true
+
+# Kube State Metrics (collects K8s object metrics)
+kubeStateMetrics:
+  enabled: true
+
+# Enable service monitors
+serviceMonitor:
+  enabled: true
