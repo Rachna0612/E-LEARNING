@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: learned-deployment
+  namespace: learned
+  labels:
+    app: learned
+spec:
+  replicas: 2                    # Start with 2 (HPA will scale up/down)
+  selector:
+    matchLabels:
+      app: learned
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1                # Create 1 new pod before killing old
+      maxUnavailable: 0          # Never have 0 pods running during update
+  template:
+    metadata:
+      labels:
+        app: learned
+    spec:
+      containers:
+      - name: learned-container
+        image: rachna0612/learned-app:v1
+        imagePullPolicy: Always  # Always pull latest from Docker Hub
+        ports:
+        - containerPort: 80
+          name: http
+        envFrom:
+        - configMapRef:
+            name: learned-config  # Load environment vars from ConfigMap
+        resources:
+          requests:               # Minimum guaranteed resources
+            memory: "64Mi"
+            cpu: "100m"           # 100m = 0.1 CPU core
+          limits:                 # Maximum allowed (won't go beyond this)
+            memory: "128Mi"
+            cpu: "300m"
+        livenessProbe:            # If this fails, pod is RESTARTED
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15  # Wait 15s before first check
+          periodSeconds: 20
+          failureThreshold: 3
+        readinessProbe:           # If this fails, pod gets NO TRAFFIC
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
